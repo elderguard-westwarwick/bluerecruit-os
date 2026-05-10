@@ -965,11 +965,11 @@
       btn.disabled = true;
 
       fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(out)
-      })
+  method: 'POST',
+  mode: 'no-cors',
+  headers: {},
+  body: JSON.stringify(out)
+})
       .then(() => {
         form.style.display = 'none';
         document.getElementById('success-msg').style.display = 'block';
