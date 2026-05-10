@@ -964,22 +964,33 @@
       btn.textContent = 'Submitting…';
       btn.disabled = true;
 
-      fetch(APPS_SCRIPT_URL, {
-  method: 'POST',
-  mode: 'no-cors',
-  headers: {},
-  body: JSON.stringify(out)
-})
-      .then(() => {
-        form.style.display = 'none';
-        document.getElementById('success-msg').style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      })
-      .catch(err => {
-        btn.textContent = 'Submit Intake →';
-        btn.disabled = false;
-        alert('There was a problem submitting the form. Please try again or contact BlueRecruit directly.');
-        console.error('Submission error:', err);
+      // Send via hidden iframe to avoid CORS issues
+var iframe = document.createElement('iframe');
+iframe.name = 'hidden_iframe';
+iframe.style.display = 'none';
+document.body.appendChild(iframe);
+
+var hiddenForm = document.createElement('form');
+hiddenForm.method = 'POST';
+hiddenForm.action = APPS_SCRIPT_URL;
+hiddenForm.target = 'hidden_iframe';
+
+var input = document.createElement('input');
+input.type = 'hidden';
+input.name = 'data';
+input.value = JSON.stringify(out);
+hiddenForm.appendChild(input);
+
+document.body.appendChild(hiddenForm);
+hiddenForm.submit();
+
+setTimeout(() => {
+  form.style.display = 'none';
+  document.getElementById('success-msg').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  btn.textContent = 'Submit Intake →';
+  btn.disabled = false;
+}, 2000);
       });
     });
   </script>
